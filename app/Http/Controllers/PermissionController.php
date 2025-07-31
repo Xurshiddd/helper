@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use Spatie\Permission\Models\Permission;
 
 class PermissionController extends Controller
 {
@@ -12,7 +13,7 @@ class PermissionController extends Controller
      */
     public function index()
     {
-           
+        return response()->json(['data' => Permission::all()]);
     }
 
     /**
@@ -43,7 +44,9 @@ class PermissionController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $request->validate(['name'=> 'string|required']);
+        Permission::where('id', $id)->update(['name' => $request->name]);
+        return response()->json(['message' => 'Permission updated successfully']);
     }
 
     /**
@@ -51,6 +54,8 @@ class PermissionController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $per = Permission::find($id);
+        $per->delete();
+        return response()->json(['message' => 'Permission deleted successfully']);
     }
 }
