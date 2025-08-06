@@ -41,6 +41,7 @@ class AuthController extends Controller
         if (!$user || !Hash::check($request->password, $user->password)) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
+        dd($user);
         $token = auth()->login($user);
         return $this->respondWithToken($token);
     }
