@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
@@ -35,19 +34,16 @@ class AuthController extends Controller
         }
         return response()->json(['message' => 'User registered successfully', 'user' => $user], 201);
     }
-    public function login(Request $request)
+    public function login()
     {
-        $user = User::where('email', $request->email)->first();
-        dd($user, $request->password, $user->password, Hash::make($user->password));
-        if (!$user || !Hash::check($request->password, $user->password)) {
-            
+        $credentials = request(['email', 'password']);
+        
+        if (!$token = auth()->attempt($credentials)) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
         
-        $token = auth()->login($user);
         return $this->respondWithToken($token);
     }
-    
     /**
     * Get the authenticated User.
     *
