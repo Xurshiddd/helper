@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 
 class AuthController extends Controller
@@ -34,9 +34,9 @@ class AuthController extends Controller
         }
         return response()->json(['message' => 'User registered successfully', 'user' => $user], 201);
     }
-    public function login()
+    public function login(Request $request)
     {
-        $credentials = request(['email', 'password']);
+        $credentials = $request->only('email', 'password');
         
         if (! $token = auth()->attempt($credentials)) {
             return response()->json(['error' => 'Unauthorized'], 401);
