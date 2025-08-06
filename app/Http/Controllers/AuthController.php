@@ -38,10 +38,12 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $user = User::where('email', $request->email)->first();
+        dd($user, $request->password, $user->password, Hash::make($user->password));
         if (!$user || !Hash::check($request->password, $user->password)) {
+            
             return response()->json(['error' => 'Unauthorized'], 401);
         }
-        dd($user);
+        
         $token = auth()->login($user);
         return $this->respondWithToken($token);
     }
